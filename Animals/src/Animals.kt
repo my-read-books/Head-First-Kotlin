@@ -1,25 +1,25 @@
-// To use a class as a superclass, it must be declared as open. Everything you
-//want to override must also be open.
+// To use a class as a superclass, it must be declared as abstract . Everything you
+//want to override must also be abstract .
 
-open class Animal() {
-    open val image = ""
-    open val food = ""
-    open val habitat = ""
+interface Roamable{
+    fun roam()
+}
+
+abstract class Animal(): Roamable {
+    abstract val image: String
+    abstract val food: String
+    abstract val habitat: String
     var hunger = 10
 
-    open fun makeNoise(){
-        println("The Animal is making the noise")
-    }
+    abstract fun makeNoise()
 
-    open fun eat(){
-        println("The Animal is eating")
-    }
+    abstract fun eat()
 
-    open fun roam(){
+    override fun roam() {
         println("The Animal is roaming")
     }
 
-    fun sleep(){
+    fun sleep() {
         println("The Animal is sleeping")
     }
 }
@@ -29,7 +29,7 @@ open class Animal() {
 
 // When inherit must call constructor of superclass () - Animal()
 
-class Hippo : Animal(){
+class Hippo : Animal() {
 
     // if val - use override, but if var - change it value in init: init{hunger = newValue}
     // can override val by var, but not it works one way (can't override var to val)
@@ -50,13 +50,13 @@ class Hippo : Animal(){
 //If you want to stop a function or property from being overridden further down
 //the class hierarchy, you can prefix it with final.
 
-open class Canine: Animal(){
+abstract class Canine : Animal() {
     override fun roam() {
         println("The Canine is roaming")
     }
 }
 
-class Wolf: Canine(){
+class Wolf : Canine() {
     override val image = "wolf.jpg"
     override val food = "meat"
     override val habitat = "forests"
@@ -70,8 +70,15 @@ class Wolf: Canine(){
     }
 }
 
-class Vet{
-    fun giveShoot(animal: Animal){
+class Vehicles: Roamable{
+    override fun roam() {
+        println("The Vehicles is roaming")
+    }
+
+}
+
+class Vet {
+    fun giveShoot(animal: Animal) {
         // Do same medical
         animal.makeNoise()
     }
@@ -79,7 +86,7 @@ class Vet{
 
 fun main(args: Array<String>) {
     val animals = arrayOf(Hippo(), Wolf())
-    for (animal in animals){
+    for (animal in animals) {
         animal.roam()
         animal.eat()
     }
@@ -89,4 +96,12 @@ fun main(args: Array<String>) {
     val hippo = Hippo()
     vet.giveShoot(wolf)
     vet.giveShoot(hippo)
+
+    val roamables = arrayOf(Hippo(), Wolf(), Vehicles())
+    for (item in roamables){
+       item.roam()
+        if (item is Animal){
+            item.eat()
+        }
+    }
 }
